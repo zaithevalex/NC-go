@@ -44,10 +44,16 @@ func GET_INFO(person Person) {
 }
 
 func main() {
-	person1 := Person{name: "Aleksander", age: 21, height: 186.6, weight: 64.5}
-	GET_INFO(person1)
-	person1.setName1("Dima Godyna")
-	GET_INFO(person1)
-	person1.setName2("Dima Godyna")
-	GET_INFO(person1)
+	//person1 := Person{name: "Aleksander", age: 21, height: 186.6, weight: 64.5}
+	//GET_INFO(person1)
+	//person1.setName1("Dima Godyna")
+	//GET_INFO(person1)
+	//person1.setName2("Dima Godyna")
+	//GET_INFO(person1)
+	//
+	//person2 := &person1
+	//person2.setName2("Oleg")
+	//GET_INFO(person1)
+	//GET_INFO(*person2)
+
 }
