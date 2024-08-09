@@ -69,7 +69,7 @@ func main() {
 		}
 	}()
 
-	time.Sleep(2 * time.Second)
+	//time.Sleep(2 * time.Second)
 
 	var lenRequests = len(requests)
 	var index int

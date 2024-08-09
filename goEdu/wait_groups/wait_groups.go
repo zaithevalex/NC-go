@@ -18,8 +18,12 @@ func main() {
 	var wg sync.WaitGroup
 
 	for index := range 5 {
+		// add 1 to general internal counter
 		wg.Add(1)
 		go counter(index, &wg)
+
+		// sub 1 to general internal counter
+		wg.Done()
 	}
 
 	// wait, while will call wg.Done() for each of goroutine

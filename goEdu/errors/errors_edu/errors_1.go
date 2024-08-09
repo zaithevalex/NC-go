@@ -29,9 +29,10 @@ func main() {
 		number:  nominator,
 		message: "divide by zero",
 	}
-	fmt.Println(err1)
-	fmt.Println(&err1)
+
+	fmt.Println(err1)  // <=> err1, because doesn't exist (e ArgError) Error() string {...}
+	fmt.Println(&err1) // <=> (*(&err1)).Error()
 	var err2 = &err1
 	fmt.Println(&err2)
-	
+
 }
