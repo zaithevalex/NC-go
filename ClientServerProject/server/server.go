@@ -8,11 +8,6 @@ import (
 	"net"
 )
 
-type DescriptionItem struct {
-	id      int64  `bson:"id"`
-	content string `bson:"content"`
-}
-
 type DescriptionServer struct {
 	desc.DescriptionServiceServer
 }
@@ -35,10 +30,11 @@ func main() {
 }
 
 func (descriptionServer *DescriptionServer) GetDescription(context context.Context, request *desc.DescriptionRequest) (*desc.DescriptionReply, error) {
+	fmt.Println("request ID:", request.GetId())
 	return &desc.DescriptionReply{
 		Description: &desc.Description{
-			Id:      1,
-			Content: "1st message",
+			Id:      request.GetId(),
+			Content: fmt.Sprintf("message #%d", request.GetId()),
 		},
 	}, nil
 }
