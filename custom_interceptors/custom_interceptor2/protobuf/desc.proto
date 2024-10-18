@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package main;
+option go_package = "./proto";
+
+message Description {
+  int64 id = 1;
+  string content = 2;
+}
+
+message DescriptionRequest {
+  int64 id = 1;
+}
+
+message DescriptionReply {
+  Description description = 1;
+}
+
+service DescriptionService {
+  rpc GetDescription(DescriptionRequest) returns (DescriptionReply) {}
+}
