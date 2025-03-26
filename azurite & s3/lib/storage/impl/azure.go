@@ -38,6 +38,9 @@ func (a AzureClient) BucketExists(ctx context.Context, bucketName string) (bool,
 
 func (a AzureClient) DeleteObject(ctx context.Context, bucketName, objectName string) error {
 	exists, err := a.BucketExists(ctx, bucketName)
+	if err != nil {
+		return err
+	}
 	if !exists {
 		return errors.New(fmt.Sprintf("bucket %s does not exist", bucketName))
 	}
@@ -81,11 +84,17 @@ func (a AzureClient) ObjectExists(ctx context.Context, bucketName, objectName st
 
 func (a AzureClient) LoadObject(ctx context.Context, bucketName, objectName string) ([]byte, error) {
 	exists, err := a.BucketExists(ctx, bucketName)
+	if err != nil {
+		return err
+	}
 	if !exists {
 		return nil, errors.New(fmt.Sprintf("bucket %s does not exist", bucketName))
 	}
 
 	exists, err = a.ObjectExists(ctx, bucketName, objectName)
+	if err != nil {
+		return err
+	}
 	if !exists {
 		return nil, errors.New(fmt.Sprintf("object %s does not exist in the %s", objectName, bucketName))
 	}
@@ -108,8 +117,10 @@ func (a AzureClient) LoadObject(ctx context.Context, bucketName, objectName stri
 }
 
 func (a AzureClient) StoreObject(ctx context.Context, bucketName, objectName string, reader io.Reader, size int64) error {
-	containerClient := a.NewContainerClient(bucketName)
 	exists, err := a.BucketExists(ctx, bucketName)
+	if err != nil {
+		return err
+	}
 	if !exists {
 		_, err = containerClient.Create(ctx, nil)
 		if err != nil {
@@ -117,6 +128,7 @@ func (a AzureClient) StoreObject(ctx context.Context, bucketName, objectName str
 		}
 	}
 
+	containerClient := a.NewContainerClient(bucketName)
 	blobClient := containerClient.NewBlockBlobClient(objectName)
 
 	if size <= 0 {
