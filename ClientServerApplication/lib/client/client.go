@@ -1,6 +1,7 @@
-package lib
+package client
 
 import (
+	"ClientServerApplication/lib/report"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -11,7 +12,7 @@ type Client struct {
 	Client *http.Client
 }
 
-func (c Client) Send(url string, report *Report) (*http.Response, error) {
+func (c Client) Send(url string, report *report.Report) (*http.Response, error) {
 	content, err := json.Marshal(report)
 	if err != nil {
 		return nil, err
@@ -21,7 +22,7 @@ func (c Client) Send(url string, report *Report) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	resp.Body.Close()
 
 	return resp, nil
 }
