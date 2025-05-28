@@ -16,7 +16,7 @@ type Client struct {
 }
 
 // Send sends report to the specified url.
-func (c *Client) Send(url string, report *report.Report) (*http.Response, error) {
+func (c Client) Send(url string, report *report.Report) (*http.Response, error) {
 	content, err := json.Marshal(report)
 	if err != nil {
 		return nil, err
