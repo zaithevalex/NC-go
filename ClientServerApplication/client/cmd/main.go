@@ -26,16 +26,15 @@ func main() {
 	}
 
 	log.Println("Amount of clients:", len(clients))
-
 	for id, c := range clients {
-		go send(id, c)
+		go sender(id, c)
 	}
 
 	<-done
 }
 
-// send is designed to send requests from each goroutine.
-func send(id int, client *client.Client) {
+// sender is designed to send requests from each goroutine.
+func sender(id int, client *client.Client) {
 	for {
 		r := &report.Report{Id: client.Id, Type: report.ReportType(rand.Intn(report.AmountReportTypes))}
 		delay := time.Duration(minSendTime+rand.Intn(maxSendTime-minSendTime+1)) * time.Second

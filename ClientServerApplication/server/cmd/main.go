@@ -39,6 +39,7 @@ func main() {
 		}
 	}()
 
+	// handler
 	http.HandleFunc("/", handler)
 
 	// run server on port 8080
@@ -49,6 +50,7 @@ func main() {
 
 // handler processes requests on the path `/`.
 func handler(w http.ResponseWriter, r *http.Request) {
+	// json decoding
 	var report report.Report
 	err := json.NewDecoder(r.Body).Decode(&report)
 	if err != nil {
@@ -56,12 +58,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check, if the report type already exists in the doubleSet
 	if doubleSet.Exists(report.Id, report.Type) {
 		log.Printf("report already exists: `{%v, %v}`\n", report.Id, report.Type)
 		http.Error(w, fmt.Sprintf("report already exists: `{%v, %v}`", report.Id, report.Type), http.StatusConflict)
 		return
 	}
 
+	// adding report info into doubleSet and reportQueue
 	doubleSet.Add(report.Id, report.Type)
 	reportQueue.Add(&report)
 	log.Printf("amount of requests in queue: %d\n", reportQueue.Size())
@@ -74,7 +78,9 @@ func runner(id int, reports chan *report.Report) {
 		delay := time.Duration(minProcessingTime+rand.Intn(maxProcessingTime-minProcessingTime+1)) * time.Second
 		log.Printf("runner %d started report `{%v, %v}`. Processing time: %s\n", id, r.Id, r.Type, delay.String())
 		time.Sleep(delay)
+
 		doubleSet.Remove(r.Id, r.Type)
+
 		log.Printf("runner %d finished report `{%v, %v}`\n", id, r.Id, r.Type)
 		log.Printf("amount of requests in queue: %d\n", reportQueue.Size())
 	}

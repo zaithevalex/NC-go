@@ -21,35 +21,29 @@ type (
 		Id   int        `json:"id"`
 		Type ReportType `json:"report_type"`
 	}
-	ReportQueue[T, V comparable] struct {
-		mu    sync.Mutex
+	reportQueue[T, V comparable] struct {
 		elems []*Report
+		mutex sync.Mutex
 	}
 )
 
-func NewReportQueue() *ReportQueue[int, ReportType] {
-	return &ReportQueue[int, ReportType]{
+func NewReportQueue() *reportQueue[int, ReportType] {
+	return &reportQueue[int, ReportType]{
 		elems: make([]*Report, 0),
+		mutex: sync.Mutex{},
 	}
 }
 
-func (q *ReportQueue[T, V]) Add(elem *Report) {
-	q.mu.Lock()
-	defer q.mu.Unlock()
+func (q *reportQueue[T, V]) Add(elem *Report) {
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
 
 	q.elems = append(q.elems, elem)
 }
 
-func (q *ReportQueue[T, V]) Peek() *Report {
-	if len(q.elems) == 0 {
-		return nil
-	}
-	return q.elems[0]
-}
-
-func (q *ReportQueue[T, V]) Remove() *Report {
-	q.mu.Lock()
-	defer q.mu.Unlock()
+func (q *reportQueue[T, V]) Remove() *Report {
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
 
 	if len(q.elems) == 0 {
 		return nil
@@ -60,6 +54,6 @@ func (q *ReportQueue[T, V]) Remove() *Report {
 	return removingElem
 }
 
-func (q *ReportQueue[T, V]) Size() int {
+func (q *reportQueue[T, V]) Size() int {
 	return len(q.elems)
 }

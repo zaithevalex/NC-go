@@ -1,35 +1,36 @@
 package doubleset
 
 import (
-	"go/types"
 	"sync"
 )
 
-type DoubleSet[T, V comparable] struct {
+// doubleSet is a data structure that allows for the storage of two-dimensional sets
+// of different comparable (T, V) data types.
+type doubleSet[T, V comparable] struct {
 	mutex sync.Mutex
-	set   map[T]map[V]types.Nil
+	set   map[T]map[V]struct{}
 }
 
-func NewDoubleSet[T, V comparable]() *DoubleSet[T, V] {
-	return &DoubleSet[T, V]{
-		set: make(map[T]map[V]types.Nil),
+// NewDoubleSet creates a two-dimensional doubleSet.
+func NewDoubleSet[T, V comparable]() *doubleSet[T, V] {
+	return &doubleSet[T, V]{
+		set: make(map[T]map[V]struct{}),
 	}
 }
 
-func (ds *DoubleSet[T, V]) Add(key1 T, key2 V) {
+// Add adds an element {key1 T, key2 V} to doubleSet.
+func (ds *doubleSet[T, V]) Add(key1 T, key2 V) {
 	ds.mutex.Lock()
 	defer ds.mutex.Unlock()
 
-	if ds.set == nil {
-		ds.set = make(map[T]map[V]types.Nil)
-	}
 	if ds.set[key1] == nil {
-		ds.set[key1] = make(map[V]types.Nil)
+		ds.set[key1] = make(map[V]struct{})
 	}
-	ds.set[key1][key2] = types.Nil{}
+	ds.set[key1][key2] = struct{}{}
 }
 
-func (ds *DoubleSet[T, V]) Exists(key1 T, key2 V) bool {
+// Exists checks whether an element {key1 T, key2 V} exists in the doubleSet.
+func (ds *doubleSet[T, V]) Exists(key1 T, key2 V) bool {
 	ds.mutex.Lock()
 	defer ds.mutex.Unlock()
 
@@ -42,12 +43,14 @@ func (ds *DoubleSet[T, V]) Exists(key1 T, key2 V) bool {
 	return false
 }
 
-func (ds *DoubleSet[T, V]) Remove(key1 T, key2 V) {
+// Remove removes the specified element {key1 T, key2 V} from doubleSet.
+// If the internal set is empty, then the external doubleSet with the key key1 is deleted.
+func (ds *doubleSet[T, V]) Remove(key1 T, key2 V) {
 	ds.mutex.Lock()
 	defer ds.mutex.Unlock()
 
 	delete(ds.set[key1], key2)
-	if len(ds.set[key1]) == 1 {
+	if len(ds.set[key1]) == 0 {
 		delete(ds.set, key1)
 	}
 }
