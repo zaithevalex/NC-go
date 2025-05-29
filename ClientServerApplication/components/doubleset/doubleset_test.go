@@ -1,7 +1,7 @@
 package doubleset
 
 import (
-	"ClientServerApplication/lib/report"
+	"ClientServerApplication/components/report"
 	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"

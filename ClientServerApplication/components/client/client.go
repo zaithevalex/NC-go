@@ -1,7 +1,7 @@
 package client
 
 import (
-	"ClientServerApplication/lib/report"
+	"ClientServerApplication/components/report"
 	"bytes"
 	"encoding/json"
 	"net/http"

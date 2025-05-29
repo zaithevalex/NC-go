@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ClientServerApplication/lib/doubleset"
-	"ClientServerApplication/lib/report"
+	"ClientServerApplication/components/doubleset"
+	"ClientServerApplication/components/report"
 	"encoding/json"
 	"fmt"
 	"github.com/prometheus/client_golang/prometheus"

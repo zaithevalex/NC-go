@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ClientServerApplication/lib/client"
-	"ClientServerApplication/lib/report"
+	"ClientServerApplication/components/client"
+	"ClientServerApplication/components/report"
 	"log"
 	"math/rand"
 	"net/http"
