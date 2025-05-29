@@ -91,7 +91,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// check, if the report type already exists in the doubleSet
 	if doubleSet.Exists(report.Id, report.Type) {
-		log.Printf("report already exists: `{%v, %v}`\n", report.Id, report.Type)
+		log.Printf("server: report already exists: `{%v, %v}`\n", report.Id, report.Type)
 		http.Error(w, fmt.Sprintf("report already exists: `{%v, %v}`", report.Id, report.Type), http.StatusConflict)
 		return
 	}
@@ -100,21 +100,21 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	doubleSet.Add(report.Id, report.Type)
 	reportQueue.Add(&report)
 	requestsQueue.Set(float64(reportQueue.Size()))
-	log.Printf("amount of requests in queue: %d\n", reportQueue.Size())
-	log.Printf("report added: `{%v, %v}`\n", report.Id, report.Type)
+	log.Printf("server: amount of requests in queue: %d\n", reportQueue.Size())
+	log.Printf("server: report added: `{%v, %v}`\n", report.Id, report.Type)
 }
 
 // process is a function for the ability to process data from different goroutines.
 func runner(id int, reports chan *report.Report) {
 	for r := range reports {
 		delay := time.Duration(minProcessingTime+rand.Intn(maxProcessingTime-minProcessingTime+1)) * time.Second
-		log.Printf("runner %d started report `{%v, %v}`. Processing time: %s\n", id, r.Id, r.Type, delay.String())
+		log.Printf("server: runner %d started report `{%v, %v}`. Processing time: %s\n", id, r.Id, r.Type, delay.String())
 		requestsActive.Inc()
 		time.Sleep(delay)
 
 		doubleSet.Remove(r.Id, r.Type)
 		requestsActive.Dec()
-		log.Printf("runner %d finished report `{%v, %v}`\n", id, r.Id, r.Type)
-		log.Printf("amount of requests in queue: %d\n", reportQueue.Size())
+		log.Printf("server: runner %d finished report `{%v, %v}`\n", id, r.Id, r.Type)
+		log.Printf("server: amount of requests in queue: %d\n", reportQueue.Size())
 	}
 }

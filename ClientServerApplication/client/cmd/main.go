@@ -40,7 +40,7 @@ func sender(id int, client *client.Client) {
 		delay := time.Duration(minSendTime+rand.Intn(maxSendTime-minSendTime+1)) * time.Second
 
 		_, _ = client.Send("http://localhost:8080/", r)
-		log.Printf("sent report `{%v, %v}` with processing delay %v\n", r.Id, r.Type, delay)
+		log.Printf("client %v sent report `{%v, %v}` with processing delay %v\n", client.Id, r.Id, r.Type, delay)
 		time.Sleep(delay)
 	}
 }
